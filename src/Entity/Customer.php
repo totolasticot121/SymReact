@@ -9,8 +9,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
@@ -35,18 +37,26 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customer_read", "invoices_read"})
+     * @Assert\NotBlank(message="Le prénom est obligatoire.")
+     * @Assert\Length(min=2, minMessage="Le prénom doit faire entre 2 et 255 caractères.",
+     *  max=255, maxMessage="Le prénom doit faire entre 2 et 255 caractères.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customer_read", "invoices_read"})
+     * @Assert\NotBlank(message="Le nom est obligatoire.")
+     * @Assert\Length(min=2, minMessage="Le nom doit faire entre 2 et 255 caractères.",
+     *  max=255, maxMessage="Le nom doit faire entre 2 et 255 caractères.")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customer_read", "invoices_read"})
+     * @Assert\NotBlank(message="L'email est obligatoire.")
+     * @Assert\Email(message="Le format de l'adresse email doit être valide.")
      */
     private $email;
 
@@ -66,6 +76,7 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="customers")
      * @Groups({"customer_read"})
+     * @Assert\NotBlank(message="L'utilisateur est obligatoire.")
      */
     private $user;
 
