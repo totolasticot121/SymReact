@@ -89,6 +89,11 @@ class Invoice
      */
     private $chrono;
 
+    public function __construct()
+    {
+        $this->setSentAt(new \DateTime);
+    }
+
     /**
      * @Groups({"invoices_read", "invoices_subresource"})
      */
@@ -155,7 +160,7 @@ class Invoice
         return $this->chrono;
     }
 
-    public function setChrono(int $chrono): self
+    public function setChrono($chrono): self
     {
         $this->chrono = $chrono;
 

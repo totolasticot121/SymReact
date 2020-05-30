@@ -15,7 +15,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("email", message="Cette adresse email est déja utiisée.")
- * @ApiResource
+ * @ApiResource(
+ *  normalizationContext={"groups"={"users_read"}}
+ * )
  */
 class User implements UserInterface
 {
@@ -23,13 +25,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customer_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customer_read", "invoices_read", "invoices_subresource", "users_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"customer_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customer_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="L'email doit être renseigné.")
      * @Assert\Email(message="Le format de l'email doit être valide.")
      */
@@ -49,7 +51,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customer_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customer_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(min=2, minMessage="Le prénom doit faire entre 2 et 255 caractères.",
      *  max=255, maxMessage="Le prénom doit faire entre 2 et 255 caractères.")
@@ -58,7 +60,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customer_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customer_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
      * @Assert\Length(min=2, minMessage="Le nom doit faire entre 2 et 255 caractères.",
      *  max=255, maxMessage="Le nom doit faire entre 2 et 255 caractères.")
