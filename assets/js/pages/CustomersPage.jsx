@@ -1,9 +1,11 @@
 import React, { useEffect,useState } from 'react';
 import axios from 'axios';
+import Pagination from '../components/pagination';
 
 const CustomersPage = () => {
 
     const [customers, setCustomers] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         axios.get("http://localhost:8000/api/customers")
@@ -11,6 +13,24 @@ const CustomersPage = () => {
         .then(data => setCustomers(data))
         .catch(error => console.log(error.response));
     }, []);
+
+    const handleDelete = (id) => {
+
+        const originalCustomers = [...customers]; // copy of customer's array
+
+        setCustomers(customers.filter(customer => customer.id !== id))
+
+        axios.delete("http://localhost:8000/api/customers/" + id)
+        .then(response => console.log('ok'))
+        .catch(error => setCustomers(originalCustomers));
+    }
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }
+
+    const itemsPerPage = 10;
+    const paginatedCustomers = Pagination.getData(customers, itemsPerPage, currentPage);
 
     return (
         <>
@@ -29,7 +49,7 @@ const CustomersPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {customers.map(customer => (
+                    {paginatedCustomers.map(customer => (
                         <tr key={customer.id}>
                             <td>{customer.id}</td>
                             <td>
@@ -42,12 +62,19 @@ const CustomersPage = () => {
                             </td>
                             <td className="text-center">{customer.totalAmount.toLocaleString()} $</td>
                             <td>
-                                <button className="btn btn-sm btn-danger">Supprimer</button>
+                                <button className="btn btn-sm btn-danger"
+                                        disabled={customer.invoices.length > 0}
+                                        onClick={() => handleDelete(customer.id)}>
+                                    Supprimer
+                                </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length}
+                        onPageChange={handlePageChange}/>
         </>
     );
 }
