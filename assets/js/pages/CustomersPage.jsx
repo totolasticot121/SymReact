@@ -1,40 +1,74 @@
-import React, { useEffect,useState } from 'react';
-import axios from 'axios';
-import Pagination from '../components/pagination';
+import React, { useEffect, useState } from "react";
+import Pagination from "../components/Pagination";
+import CustomersAPI from '../services/CustomersAPI';
 
 const CustomersPage = () => {
-
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
 
+    // Fetch customers when loading the component
     useEffect(() => {
-        axios.get("http://localhost:8000/api/customers")
-        .then(response => response.data['hydra:member'])
-        .then(data => setCustomers(data))
-        .catch(error => console.log(error.response));
+        CustomersAPI.findAll()
+            .then((data) => setCustomers(data))
+            .catch((error) => console.log(error.response));
     }, []);
 
-    const handleDelete = (id) => {
-
+    // Manage customer supression
+    const handleDelete = async id => {
         const originalCustomers = [...customers]; // copy of customer's array
 
-        setCustomers(customers.filter(customer => customer.id !== id))
+        setCustomers(customers.filter((customer) => customer.id !== id));
 
-        axios.delete("http://localhost:8000/api/customers/" + id)
-        .then(response => console.log('ok'))
-        .catch(error => setCustomers(originalCustomers));
-    }
+        try{
+            await CustomersAPI.delete(id)
+        } catch(error) {
+            setCustomers(originalCustomers);
+        }
+    };
 
+    // Manage page change
     const handlePageChange = (page) => {
         setCurrentPage(page);
-    }
+    };
+
+    // Manage cutomer search
+    const handleSearch = (event) => {
+        setSearch(event.currentTarget.value);
+        setCurrentPage(1);
+    };
 
     const itemsPerPage = 10;
-    const paginatedCustomers = Pagination.getData(customers, itemsPerPage, currentPage);
+
+    // Filtering customers based on search
+    const filteredCustomers = customers.filter(
+        (c) =>
+            c.firstName.toLowerCase().includes(search.toLowerCase()) ||
+            c.lastName.toLowerCase().includes(search.toLowerCase()) ||
+            c.email.toLowerCase().includes(search.toLowerCase()) ||
+            ( c.company && c.company.toLowerCase().includes(search.toLowerCase()))
+    );
+
+    // Data pagination
+    const paginatedCustomers = Pagination.getData(
+        filteredCustomers,
+        itemsPerPage,
+        currentPage
+    );
 
     return (
         <>
-            <h1>Liste des clients</h1>
+            <h1 className="mb-3">Liste des clients</h1>
+
+            <div className="form-group">
+                <input
+                    onChange={handleSearch}
+                    value={search}
+                    type="text"
+                    className="form-control"
+                    placeholder="Rechercher..."
+                />
+            </div>
 
             <table className="table table-hover">
                 <thead>
@@ -49,22 +83,30 @@ const CustomersPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {paginatedCustomers.map(customer => (
+                    {paginatedCustomers.map((customer) => (
                         <tr key={customer.id}>
                             <td>{customer.id}</td>
                             <td>
-                                <a href="#">{customer.firstName} {customer.lastName}</a>
+                                <a href="#">
+                                    {customer.firstName} {customer.lastName}
+                                </a>
                             </td>
                             <td>{customer.email}</td>
                             <td>{customer.company}</td>
                             <td className="text-center">
-                                <span className="badge badge-success">{customer.invoices.length}</span>
+                                <span className="badge badge-success">
+                                    {customer.invoices.length}
+                                </span>
                             </td>
-                            <td className="text-center">{customer.totalAmount.toLocaleString()} $</td>
+                            <td className="text-center">
+                                {customer.totalAmount.toLocaleString()} $
+                            </td>
                             <td>
-                                <button className="btn btn-sm btn-danger"
-                                        disabled={customer.invoices.length > 0}
-                                        onClick={() => handleDelete(customer.id)}>
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    disabled={customer.invoices.length > 0}
+                                    onClick={() => handleDelete(customer.id)}
+                                >
                                     Supprimer
                                 </button>
                             </td>
@@ -73,10 +115,16 @@ const CustomersPage = () => {
                 </tbody>
             </table>
 
-            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length}
-                        onPageChange={handlePageChange}/>
+            {itemsPerPage < filteredCustomers.length && (
+                <Pagination
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    length={filteredCustomers.length}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </>
     );
-}
- 
+};
+
 export default CustomersPage;

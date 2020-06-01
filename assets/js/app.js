@@ -1,10 +1,11 @@
-import '../css/app.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Navbar from './components/navbar';
-import HomePage from './pages/HomePage';
+import { HashRouter, Route, Switch } from 'react-router-dom';
+import '../css/app.css';
+import Navbar from './components/Navbar';
 import CustomersPage from './pages/CustomersPage';
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import InvoicesPage from './pages/InvoicesPage';
 
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
                 <Switch>
                     {/* Most specific on top */}
                     <Route path="/customers" component={CustomersPage}/>
+                    <Route path="/invoices" component={InvoicesPage}/>
                     <Route path="/" component={HomePage}/>
                 </Switch>
             </main>
