@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import AuthAPI from "../services/AuthAPI";
+import AuthContext from "../contexts/AuthContext";
 
-
-const LoginPage = (props) => {
-
+const LoginPage = ({ history }) => {
     const [credentials, setCredentials] = useState({
         username: "",
         password: "",
     });
     const [error, setError] = useState("");
+    const { setIsAuth } = useContext(AuthContext);
 
     // Manage inputs
     const handleChange = (event) => {
@@ -24,6 +24,8 @@ const LoginPage = (props) => {
         try {
             await AuthAPI.authenticate(credentials);
             setError("");
+            setIsAuth(true);
+            history.replace("/");
         } catch (error) {
             setError("Les informations fournies sont invalides.");
         }
