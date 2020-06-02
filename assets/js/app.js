@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import CustomersPage from './pages/CustomersPage';
 import HomePage from './pages/HomePage';
 import InvoicesPage from './pages/InvoicesPage';
+import LoginPage from './pages/LoginPage';
 
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
                     {/* Most specific on top */}
                     <Route path="/customers" component={CustomersPage}/>
                     <Route path="/invoices" component={InvoicesPage}/>
+                    <Route path="/login" component={LoginPage}/>
                     <Route path="/" component={HomePage}/>
                 </Switch>
             </main>

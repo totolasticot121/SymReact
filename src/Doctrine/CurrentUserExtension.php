@@ -2,6 +2,7 @@
 
 namespace App\Doctrine;
 
+use App\Entity\User;
 use App\Entity\Invoice;
 use App\Entity\Customer;
 use Doctrine\ORM\QueryBuilder;

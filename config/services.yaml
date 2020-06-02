@@ -27,5 +27,15 @@ services:
         tags:
             - {name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: updateJwtData}
 
+    # app.event.jwt_authentication_success_listener:
+    #     class: App\Events\JWTAuthenticationSuccessListener
+    #     arguments:
+    #         $tokenLifetime: '%env(JWT_TTL)%'
+    #     tags:
+    #         tag_1:
+    #             name: kernel.event_listener
+    #             event: lexik_jwt_authentication.on_authentication_success
+    #             method: onAuthenticationSuccess
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
