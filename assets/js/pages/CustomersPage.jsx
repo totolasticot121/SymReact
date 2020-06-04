@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../components/Pagination";
-import CustomersAPI from '../services/CustomersAPI';
+import CustomersAPI from "../services/CustomersAPI";
+import { Link } from "react-router-dom";
 
 const CustomersPage = () => {
     const [customers, setCustomers] = useState([]);
@@ -15,14 +16,14 @@ const CustomersPage = () => {
     }, []);
 
     // Manage customer supression
-    const handleDelete = async id => {
+    const handleDelete = async (id) => {
         const originalCustomers = [...customers]; // copy of customer's array
 
         setCustomers(customers.filter((customer) => customer.id !== id));
 
-        try{
-            await CustomersAPI.delete(id)
-        } catch(error) {
+        try {
+            await CustomersAPI.delete(id);
+        } catch (error) {
             setCustomers(originalCustomers);
         }
     };
@@ -46,7 +47,7 @@ const CustomersPage = () => {
             c.firstName.toLowerCase().includes(search.toLowerCase()) ||
             c.lastName.toLowerCase().includes(search.toLowerCase()) ||
             c.email.toLowerCase().includes(search.toLowerCase()) ||
-            ( c.company && c.company.toLowerCase().includes(search.toLowerCase()))
+            (c.company && c.company.toLowerCase().includes(search.toLowerCase()))
     );
 
     // Data pagination
@@ -58,7 +59,12 @@ const CustomersPage = () => {
 
     return (
         <>
-            <h1 className="mb-3">Liste des clients</h1>
+            <div className="mb-3 d-flex justify-content-between align-items-center">
+                <h1 className="mb-3">Liste des clients</h1>
+                <Link to="/customers/new" className="btn btn-primary">
+                    Nouveau client
+                </Link>
+            </div>
 
             <div className="form-group">
                 <input

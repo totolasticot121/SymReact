@@ -10,8 +10,8 @@ const Pagination = ({currentPage, itemsPerPage, length, onPageChange}) => {
     }
 
     return ( 
-        <div>
-            <ul className="pagination pagination-sm">
+        <div className="d-flex justify-content-center mt-3">
+            <ul className="pagination pagination-m">
                 <li className={"page-item" + (currentPage === 1 && " disabled")}>
                     <button className="page-link" onClick={() => onPageChange(currentPage - 1)}>
                         &laquo;
@@ -31,7 +31,7 @@ const Pagination = ({currentPage, itemsPerPage, length, onPageChange}) => {
                 </li>
             </ul>
         </div>
-     );
+    );
 }
 
 Pagination.getData = (items, itemsPerPage, currentPage) => {
