@@ -78,6 +78,7 @@ const CustomersPageApiPagination = () => {
                                         onClick={() => handleDelete(customer.id)}>
                                     Supprimer
                                 </button>
+                                
                             </td>
                         </tr>
                     ))}
