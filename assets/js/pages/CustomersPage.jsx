@@ -18,7 +18,9 @@ const CustomersPage = () => {
                 setCustomers(data);
                 setLoading(false);
             })
-            .catch((error) => toast.error("Une erreur est survenue lors du chargmenet des clients."));
+            .catch((error) =>
+                toast.error("Une erreur est survenue lors du chargmenet des clients.")
+            );
     }, []);
 
     // Manage customer supression
@@ -55,7 +57,8 @@ const CustomersPage = () => {
             c.firstName.toLowerCase().includes(search.toLowerCase()) ||
             c.lastName.toLowerCase().includes(search.toLowerCase()) ||
             c.email.toLowerCase().includes(search.toLowerCase()) ||
-            (c.company && c.company.toLowerCase().includes(search.toLowerCase()))
+            (c.company &&
+                c.company.toLowerCase().includes(search.toLowerCase()))
     );
 
     // Data pagination
@@ -96,38 +99,47 @@ const CustomersPage = () => {
                         <th></th>
                     </tr>
                 </thead>
-                {!loading && <tbody>
-                    {paginatedCustomers.map((customer) => (
-                        <tr key={customer.id}>
-                            <td>{customer.id}</td>
-                            <td>
-                                <a href="#">
-                                    {customer.firstName} {customer.lastName}
-                                </a>
-                            </td>
-                            <td>{customer.email}</td>
-                            <td>{customer.company}</td>
-                            <td className="text-center">
-                                <span className="badge badge-success">
-                                    {customer.invoices.length}
-                                </span>
-                            </td>
-                            <td className="text-center">
-                                {customer.totalAmount.toLocaleString()} $
-                            </td>
-                            <td>
-                                <button
-                                    className="btn btn-sm btn-danger mr-2"
-                                    disabled={customer.invoices.length > 0}
-                                    onClick={() => handleDelete(customer.id)}
-                                >
-                                    Supprimer
-                                </button>
-                                <Link to={"/customers/" + customer.id} className="btn btn-sm btn-primary">Editer</Link>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>}
+                {!loading && (
+                    <tbody>
+                        {paginatedCustomers.map((customer) => (
+                            <tr key={customer.id}>
+                                <td>{customer.id}</td>
+                                <td>
+                                    <Link to={"/customers/" + customer.id}>
+                                        {customer.firstName} {customer.lastName}
+                                    </Link>
+                                </td>
+                                <td>{customer.email}</td>
+                                <td>{customer.company}</td>
+                                <td className="text-center">
+                                    <span className="badge badge-success">
+                                        {customer.invoices.length}
+                                    </span>
+                                </td>
+                                <td className="text-center">
+                                    {customer.totalAmount.toLocaleString()} $
+                                </td>
+                                <td>
+                                    <button
+                                        className="btn btn-sm btn-danger mr-2"
+                                        disabled={customer.invoices.length > 0}
+                                        onClick={() =>
+                                            handleDelete(customer.id)
+                                        }
+                                    >
+                                        Supprimer
+                                    </button>
+                                    <Link
+                                        to={"/customers/" + customer.id}
+                                        className="btn btn-sm btn-primary"
+                                    >
+                                        Editer
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                )}
             </table>
             {loading && <TableLoader />}
 

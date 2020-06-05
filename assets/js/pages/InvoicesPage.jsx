@@ -18,7 +18,7 @@ const STATUS_LABELS = {
     Cancel: "Annulée",
 };
 
-const InvoicesPage = (props) => {
+const InvoicesPage = () => {
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -116,10 +116,9 @@ const InvoicesPage = (props) => {
                                     {invoice.chrono}
                                 </td>
                                 <td>
-                                    <a href="#">
-                                        {invoice.customer.firstName}{" "}
-                                        {invoice.customer.lastName}
-                                    </a>
+                                    <Link to={"/invoices/" + invoice.id}>
+                                            {invoice.customer.firstName} {invoice.customer.lastName}
+                                    </Link>
                                 </td>
                                 <td>{formatDate(invoice.sentAt)}</td>
                                 <td className="text-center">

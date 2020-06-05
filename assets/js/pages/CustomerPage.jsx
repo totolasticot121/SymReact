@@ -65,24 +65,26 @@ const CustomerPage = ({ match, history }) => {
 
         try {
             setErrors({});
+
             if (editing) {
                 await CustomersAPI.update(id, customer);
                 toast.success("Le client a bien été modifié");
-                history.replace("/customers");
             } else {
                 await CustomersAPI.create(customer);
-                toast.success("Le client a bien été enregistré.");
+                toast.success("Le client a bien été créé");
                 history.replace("/customers");
             }
-        } catch (error) {
-            let violations = error.response.data.violations;
+        } catch ({ response }) {
+            const { violations } = response.data;
+
             if (violations) {
                 const apiErrors = {};
                 violations.forEach(({ propertyPath, message }) => {
                     apiErrors[propertyPath] = message;
                 });
+
                 setErrors(apiErrors);
-                toast.error("Une erreur est survenue");
+                toast.error("Des erreurs dans votre formulaire !");
             }
         }
     };
